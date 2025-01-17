@@ -9,7 +9,8 @@ while (Raylib.WindowShouldClose() == false)
     Raylib.BeginDrawing();
 
     Raylib.ClearBackground(Color.Beige);
-    Raylib.DrawLine(800, 100, 0, 100, Color.Pink);
+    Raylib.DrawRectangle(0, 125, 800, 25, Color.Pink);
+    
 
     Raylib.EndDrawing();
 }
