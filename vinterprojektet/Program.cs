@@ -3,7 +3,7 @@ using Raylib_cs;
 
 /* 
 
-Jag ska lägga till en funktion där den gröna lampan längst fram blir röd av slump med Random.Next
+Jag ska lägga till en funktion där den gröna lampan längst fram blir röd av slump med random.Next
 Om spelaren rör sig medan lampan är röd ska skärmen bli svart och en röd text ska visas där det står "GAME OVER"
 
 */
@@ -25,6 +25,12 @@ float speed = 2f;
 float circleX = screenWidth / 2f;
 float circleY = screenHeight - rectangleHeight - circleRadius;
 
+// Skriftande ljus
+Random random = new Random();
+double lastChangeTime = Raylib.GetTime();
+double nextChangeTime = random.Next(2, 3);
+bool GreenLight = true; // Startar med grönt ljus
+
 // Spelets loop
 while (Raylib.WindowShouldClose() == false)
 {
@@ -32,7 +38,17 @@ while (Raylib.WindowShouldClose() == false)
     Raylib.BeginDrawing();
     Raylib.ClearBackground(Color.Beige); // Sand
     Raylib.DrawRectangle(0, 125, 800, 25, Color.Pink); // Mållinje
-    Raylib.DrawCircle(400, 50, 50, Color.Green); // Ljus
+
+    // Skiftande ljus
+    double currentTime = Raylib.GetTime();
+    if (currentTime - lastChangeTime >= nextChangeTime)
+    {
+        GreenLight = !GreenLight; // Växla färg
+        lastChangeTime = currentTime;
+        nextChangeTime = random.Next(2, 3);
+    }
+    Color lightColor = GreenLight ? Color.Green : Color.Red;
+    Raylib.DrawCircle(400, 50, 50, lightColor); // Ljus
 
     // Rörelsekontroller
     if (Raylib.IsKeyDown(KeyboardKey.Right) && (circleX + circleRadius + speed) < screenWidth)
