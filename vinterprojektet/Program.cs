@@ -32,6 +32,9 @@ double lastChangeTime = Raylib.GetTime();
 double nextChangeTime = random.Next(2, 3);
 bool GreenLight = true; // Startar med grönt ljus
 
+bool gameOver = false;
+bool gameWon = false;
+
 // Spelets loop
 while (Raylib.WindowShouldClose() == false)
 {
