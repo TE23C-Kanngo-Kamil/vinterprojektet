@@ -6,6 +6,7 @@ using Raylib_cs;
 Om spelaren rör sig medan lampan är röd förlorar man och skärmen blir svart och en röd text ska visas där det står "GAME OVER"
 Om spelaren klarar sig fram till mållinjen vinner man och skärmen blir grön och en vit text ska visas där det står "YOU WIN"
 Jag *kanske* lägger till en timer, och om spelaren inte kommer fram till mållinjen innan tiden är slut förlorar spelaren
+Retry knapp
 
 */
 
