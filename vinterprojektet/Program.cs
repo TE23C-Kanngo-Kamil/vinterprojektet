@@ -110,7 +110,7 @@ while (Raylib.WindowShouldClose() == false)
         gameOver = true;
     }
 
-    // Om spelaren mår mållinjen, vinn
+    // Om spelaren når mållinjen, vinn
     if (circleY <= 150) // Mållinjen är vid y = 125
     {
         gameWon = true;
