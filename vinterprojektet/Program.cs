@@ -35,13 +35,32 @@ bool GreenLight = true; // Startar med grönt ljus
 bool gameOver = false;
 bool gameWon = false;
 
+// Ny variabel tidpunkten då ljuset blir rött
+double redLightStartTime = 0;
+double reactionTime = 0.30; 
+
 // Spelets loop
 while (Raylib.WindowShouldClose() == false)
 {
-    // Ritar mappen
-    Raylib.BeginDrawing();
-    Raylib.ClearBackground(Color.Beige); // Sand
-    Raylib.DrawRectangle(0, 125, 800, 25, Color.Pink); // Mållinje
+    // Om spelet är över, visa slutskärmen
+    if (gameOver)
+    {
+        Raylib.BeginDrawing();
+        Raylib.ClearBackground(Color.Black);
+        Raylib.DrawText("GAME OVER", 250, 500, 50, Color.Red);
+        Raylib.EndDrawing();
+        continue;
+    }
+
+    if (gameWon)
+    {
+        Raylib.BeginDrawing();
+        Raylib.ClearBackground(Color.Green);
+        int textWidth = Raylib.MeasureText("YOU WIN", 50);
+        Raylib.DrawText("YOU WIN", (screenWidth - textWidth) / 2, (screenHeight - 50) / 2, 50, Color.White);
+        Raylib.EndDrawing();
+        continue;
+    }
 
     // Skiftande ljus
     double currentTime = Raylib.GetTime();
@@ -50,27 +69,56 @@ while (Raylib.WindowShouldClose() == false)
         GreenLight = !GreenLight; // Växla färg
         lastChangeTime = currentTime;
         nextChangeTime = random.Next(2, 3);
+
+        // Om ljuset blir rött, spara tiden
+        if (!GreenLight)
+        {
+            redLightStartTime = currentTime;
+        }
     }
+
     Color lightColor = GreenLight ? Color.Green : Color.Red;
     Raylib.DrawCircle(400, 50, 50, lightColor); // Ljus
 
     // Rörelsekontroller
+    bool isMoving = false;
     if (Raylib.IsKeyDown(KeyboardKey.Right) && (circleX + circleRadius + speed) < screenWidth)
     {
         circleX += speed;
+        isMoving = true;
     }
     if (Raylib.IsKeyDown(KeyboardKey.Left) && (circleX - circleRadius - speed) > 0)
     {
         circleX -= speed;
+        isMoving = true;
     }
     if (Raylib.IsKeyDown(KeyboardKey.Down) && (circleY + rectangleHeight + circleRadius + speed) < screenHeight)
     {
         circleY += speed;
+        isMoving = true;
     }
     if (Raylib.IsKeyDown(KeyboardKey.Up) && (circleY - circleRadius - speed) > 0)
     {
         circleY -= speed;
+        isMoving = true;
     }
+
+    // Förlora bara om spelaren rör sig efter reactionTime har passerat
+    if (!GreenLight && isMoving && (currentTime - redLightStartTime > reactionTime))
+    {
+        gameOver = true;
+    }
+
+    // Om spelaren mår mållinjen, vinn
+    if (circleY <= 150) // Mållinjen är vid y = 125
+    {
+        gameWon = true;
+    }
+
+    // Ritar mappen
+    Raylib.BeginDrawing();
+    Raylib.ClearBackground(Color.Beige); // Sand
+    Raylib.DrawRectangle(0, 125, 800, 25, Color.Pink); // Mållinje
 
     // Ser till att rektangeln stannar under cirkeln
     float rectangleX = circleX - rectangleWidth / 2;
